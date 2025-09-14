@@ -5,6 +5,8 @@ import { RetroGrid } from '@/components/ui/shadcn-io/retro-grid';
 import useAPI from '@/hooks/useAPI';
 import { AppSizes, AuthPaths, CreatorSignupInput, LoginInput, SignupInput, UserRoles } from '@/lib/constants';
 import { Icons } from '@/lib/icons/Icons';
+import { configService } from '@/util/config';
+import { redirectToNewURL } from '@/util/helpers';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { FormEvent, Suspense, useState } from 'react';
@@ -32,7 +34,10 @@ export default function Auth() {
 
       const isCreator = roles.includes(UserRoles.CREATOR);
 
-      const creatorAppUrl = new URL('http://localhost:3001/analytics').toString();
+      const creatorAppUrl = redirectToNewURL({
+        host: configService.NEXT_PUBLIC_BASE_URL,
+        pathname: '/analytics'
+      });
 
       if (isCreator) return router.push(creatorAppUrl);
 
