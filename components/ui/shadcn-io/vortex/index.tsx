@@ -1,12 +1,13 @@
+/* eslint-disable prefer-const */
 'use client';
 
-import React, { useEffect, useRef } from "react";
-import { createNoise3D } from "simplex-noise";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { createNoise3D } from 'simplex-noise';
 
 interface VortexProps {
-  children?: any;
+  children?: React.ReactNode;
   className?: string;
   containerClassName?: string;
   particleCount?: number;
@@ -38,29 +39,26 @@ export const Vortex = (props: VortexProps) => {
   const xOff = 0.00125;
   const yOff = 0.00125;
   const zOff = 0.0005;
-  const backgroundColor = props.backgroundColor || "#000000";
+  const backgroundColor = props.backgroundColor || '#000000';
   let tick = 0;
   const noise3D = createNoise3D();
   let particleProps = new Float32Array(particlePropsLength);
-  let center: [number, number] = [0, 0];
+  const center: [number, number] = [0, 0];
 
-  const HALF_PI: number = 0.5 * Math.PI;
   const TAU: number = 2 * Math.PI;
-  const TO_RAD: number = Math.PI / 180;
   const rand = (n: number): number => n * Math.random();
   const randRange = (n: number): number => n - rand(2 * n);
   const fadeInOut = (t: number, m: number): number => {
     let hm = 0.5 * m;
     return Math.abs(((t + hm) % m) - hm) / hm;
   };
-  const lerp = (n1: number, n2: number, speed: number): number =>
-    (1 - speed) * n1 + speed * n2;
+  const lerp = (n1: number, n2: number, speed: number): number => (1 - speed) * n1 + speed * n2;
 
   const setup = () => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (canvas && container) {
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
 
       if (ctx) {
         resize(canvas, ctx);
@@ -157,7 +155,7 @@ export const Vortex = (props: VortexProps) => {
     particleProps[i4] = vy;
     particleProps[i5] = life;
 
-    (checkBounds(x, y, canvas) || life > ttl) && initParticle(i);
+    // (checkBounds(x, y, canvas) || life > ttl) && initParticle(i);
   };
 
   const drawParticle = (
@@ -172,7 +170,7 @@ export const Vortex = (props: VortexProps) => {
     ctx: CanvasRenderingContext2D
   ) => {
     ctx.save();
-    ctx.lineCap = "round";
+    ctx.lineCap = 'round';
     ctx.lineWidth = radius;
     ctx.strokeStyle = `hsla(${hue},100%,60%,${fadeInOut(life, ttl)})`;
     ctx.beginPath();
@@ -187,10 +185,7 @@ export const Vortex = (props: VortexProps) => {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0;
   };
 
-  const resize = (
-    canvas: HTMLCanvasElement,
-    ctx?: CanvasRenderingContext2D
-  ) => {
+  const resize = (canvas: HTMLCanvasElement, ctx?: CanvasRenderingContext2D) => {
     const { innerWidth, innerHeight } = window;
 
     canvas.width = innerWidth;
@@ -200,46 +195,40 @@ export const Vortex = (props: VortexProps) => {
     center[1] = 0.5 * canvas.height;
   };
 
-  const renderGlow = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) => {
+  const renderGlow = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
-    ctx.filter = "blur(8px) brightness(200%)";
-    ctx.globalCompositeOperation = "lighter";
+    ctx.filter = 'blur(8px) brightness(200%)';
+    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
 
     ctx.save();
-    ctx.filter = "blur(4px) brightness(200%)";
-    ctx.globalCompositeOperation = "lighter";
+    ctx.filter = 'blur(4px) brightness(200%)';
+    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
   };
 
-  const renderToScreen = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) => {
+  const renderToScreen = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
-    ctx.globalCompositeOperation = "lighter";
+    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
   };
 
   useEffect(() => {
     setup();
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
+      const ctx = canvas?.getContext('2d');
       if (canvas && ctx) {
         resize(canvas, ctx);
       }
     });
-  }, []);
+  }, []); //eslint-disable-line
 
   return (
-    <div className={cn("relative h-full w-full", props.containerClassName)}>
+    <div className={cn('relative h-full w-full', props.containerClassName)}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -249,9 +238,7 @@ export const Vortex = (props: VortexProps) => {
         <canvas ref={canvasRef}></canvas>
       </motion.div>
 
-      <div className={cn("relative z-10", props.className)}>
-        {props.children}
-      </div>
+      <div className={cn('relative z-10', props.className)}>{props.children}</div>
     </div>
   );
 };
