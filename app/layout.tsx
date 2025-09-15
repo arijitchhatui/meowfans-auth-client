@@ -48,7 +48,7 @@ export const viewport: Viewport = {
   themeColor: '#FFFFFF'
 };
 
-export const verifyAccessToken = async (token: string) => {
+export const verifyAccessToken = async (token?: string) => {
   const data = await fetchRequest({
     fetchMethod: FetchMethods.POST,
     pathName: '/auth/verify',
@@ -62,20 +62,15 @@ export const verifyAccessToken = async (token: string) => {
   return data as JwtUser;
 };
 
-export const hasAccessToken = async () => {
-  const cookiesList = await cookies();
-  const accessToken = cookiesList.get(authCookieKey)?.value;
-  return accessToken ? { hasToken: true, token: accessToken } : { hasToken: false, token: null };
-};
-
 export const handleValidateAndRedirect = async () => {
-  const { hasToken, token } = await hasAccessToken();
-
-  if (hasToken && token) {
-    const jwtUser = await verifyAccessToken(token);
-    return await redirectToApp(jwtUser);
+  try {
+    const cookiesList = await cookies();
+    const accessToken = cookiesList.get(authCookieKey)?.value;
+    const jwtUser = await verifyAccessToken(accessToken);
+    if (jwtUser) return await redirectToApp(jwtUser);
+  } catch {
+    return;
   }
-  return;
 };
 
 export const redirectToApp = async (jwtUser: JwtUser) => {
