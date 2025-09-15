@@ -30,8 +30,8 @@ const useAPI = () => {
       }
     });
 
-    setCookie(authCookieKey, data.accessToken, { domain: 'localhost' });
-    setCookie(authRefreshCookieKey, data.refreshToken, { domain: 'localhost' });
+    setCookie(authCookieKey, data.accessToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    setCookie(authRefreshCookieKey, data.refreshToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     return data;
   };
 
@@ -46,8 +46,8 @@ const useAPI = () => {
         }
       }
     });
-    setCookie(authCookieKey, data.accessToken, { domain: 'localhost' });
-    setCookie(authRefreshCookieKey, data.refreshToken, { domain: 'localhost' });
+    setCookie(authCookieKey, data.accessToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    setCookie(authRefreshCookieKey, data.refreshToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     return data;
   };
 
@@ -62,8 +62,8 @@ const useAPI = () => {
         }
       }
     });
-    setCookie(authCookieKey, data.accessToken, { domain: 'localhost' });
-    setCookie(authRefreshCookieKey, data.refreshToken, { domain: 'localhost' });
+    setCookie(authCookieKey, data.accessToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
+    setCookie(authRefreshCookieKey, data.refreshToken, { domain: configService.NEXT_PUBLIC_APP_DOMAINS });
     return data;
   };
 

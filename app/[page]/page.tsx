@@ -28,8 +28,8 @@ export default function Auth() {
     e.preventDefault();
     setLoading(true);
     if (!navigator.onLine) return toast.error('You are currently offline!');
+
     try {
-      console.log(input);
       const { roles } = await login(input);
 
       const isCreator = roles.includes(UserRoles.CREATOR);
@@ -41,10 +41,9 @@ export default function Auth() {
 
       const fanAppUrl = buildSafeUrl({
         host: configService.NEXT_PUBLIC_FAN_URL,
-        pathname: '/analytics'
+        pathname: '/home'
       });
 
-      if (!roles) throw new Error('Something wrong happened');
       if (isCreator) return router.push(creatorAppUrl);
 
       toast.success('Logged in');
@@ -59,10 +58,10 @@ export default function Auth() {
   const handleSignup = async (e: FormEvent<HTMLFormElement>, input: SignupInput) => {
     e.preventDefault();
     setLoading(true);
+    if (!navigator.onLine) return toast.error('You are currently offline!');
 
     try {
-      const { roles } = await signup(input);
-      if (!roles) throw new Error('Something wrong happened');
+      await signup(input);
 
       const fanAppUrl = buildSafeUrl({
         host: configService.NEXT_PUBLIC_FAN_URL,
@@ -82,13 +81,11 @@ export default function Auth() {
     setLoading(true);
     if (!navigator.onLine) return toast.error('You are currently offline!');
     try {
-      console.log(input);
-      const { roles } = await creatorSignup(input);
-      if (!roles) throw new Error('Something wrong happened');
+      await creatorSignup(input);
 
       const creatorAppUrl = buildSafeUrl({
         host: configService.NEXT_PUBLIC_CREATOR_URL,
-        pathname: '/analytics'
+        pathname: '/profile'
       });
 
       toast.success('Logged in');
