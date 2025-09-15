@@ -39,10 +39,16 @@ export default function Auth() {
         pathname: '/analytics'
       });
 
+      const fanAppUrl = buildSafeUrl({
+        host: configService.NEXT_PUBLIC_FAN_URL,
+        pathname: '/analytics'
+      });
+
+      if (!roles) throw new Error('Something wrong happened');
       if (isCreator) return router.push(creatorAppUrl);
 
       toast.success('Logged in');
-      return router.push(creatorAppUrl);
+      return router.push(fanAppUrl);
     } catch (error) {
       toast.error('Something wrong happened!');
     } finally {
@@ -56,12 +62,14 @@ export default function Auth() {
 
     try {
       const { roles } = await signup(input);
+      if (!roles) throw new Error('Something wrong happened');
 
-      const isCreator = roles.includes(UserRoles.CREATOR);
+      const fanAppUrl = buildSafeUrl({
+        host: configService.NEXT_PUBLIC_FAN_URL,
+        pathname: '/analytics'
+      });
 
-      if (isCreator) return router.push('/analytics');
-      toast.success('Logged in');
-      return router.push('/home');
+      return router.push(fanAppUrl);
     } catch (error) {
       toast.error('Something wrong happened!');
     } finally {
@@ -76,13 +84,15 @@ export default function Auth() {
     try {
       console.log(input);
       const { roles } = await creatorSignup(input);
+      if (!roles) throw new Error('Something wrong happened');
 
-      const isCreator = roles.includes(UserRoles.CREATOR);
-
-      if (isCreator) return router.push('http://localhost:3001/analytics');
+      const creatorAppUrl = buildSafeUrl({
+        host: configService.NEXT_PUBLIC_CREATOR_URL,
+        pathname: '/analytics'
+      });
 
       toast.success('Logged in');
-      return router.push('http://localhost:3001/home');
+      return router.push(creatorAppUrl);
     } catch (error) {
       toast.error('Something wrong happened!');
     } finally {
