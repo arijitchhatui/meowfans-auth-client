@@ -44,7 +44,7 @@ const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
   };
 
   return (
-    <form className="p-6 md:p-8 flex flex-col">
+    <form className="p-6 md:p-8 flex flex-col" onSubmit={(e) => handleCreatorSignUp(e, input)}>
       <div className="flex flex-col gap-6">
         <Header />
 
