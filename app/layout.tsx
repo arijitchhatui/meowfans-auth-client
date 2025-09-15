@@ -1,9 +1,15 @@
+import { fetchRequest } from '@/hooks/useAPI';
 import { AppConfig } from '@/lib/app.config';
+import { authCookieKey, FetchMethods, JwtUser, UserRoles } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { configService } from '@/util/config';
+import { buildSafeUrl } from '@/util/helpers';
 import { Theme } from '@radix-ui/themes';
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
@@ -42,11 +48,51 @@ export const viewport: Viewport = {
   themeColor: '#FFFFFF'
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
+export const verifyAccessToken = async (token: string) => {
+  const data = await fetchRequest({
+    fetchMethod: FetchMethods.POST,
+    pathName: '/auth/verify',
+    init: {
+      body: JSON.stringify({ token }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
+  return data as JwtUser;
+};
+
+export const hasAccessToken = async () => {
+  const cookiesList = await cookies();
+  const accessToken = cookiesList.get(authCookieKey)?.value;
+  return accessToken ? { hasToken: true, token: accessToken } : { hasToken: false, token: null };
+};
+
+export const handleValidateAndRedirect = async () => {
+  const { hasToken, token } = await hasAccessToken();
+
+  if (hasToken && token) {
+    const jwtUser = await verifyAccessToken(token);
+    return await redirectToApp(jwtUser);
+  }
+  return;
+};
+
+export const redirectToApp = async (jwtUser: JwtUser) => {
+  switch (jwtUser.roles[0]) {
+    case UserRoles.CREATOR:
+      return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_CREATOR_URL, pathname: '/profile' }));
+    case UserRoles.FAN:
+      return redirect(buildSafeUrl({ host: configService.NEXT_PUBLIC_FAN_URL, pathname: '/home' }));
+  }
+};
+
+interface Props {
   children: React.ReactNode;
-}>) {
+}
+
+export default async function RootLayout({ children }: Props) {
+  await handleValidateAndRedirect();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

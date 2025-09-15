@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { LoginInput } from '@/lib/constants';
 import { isValidEmail, isValidPassword } from '@/util/helpers';
 import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
-import OtherLogin from './OtherLogin';
-import { LoginInput } from '@/lib/constants';
 import { Header } from './Header';
+import OtherLogin from './OtherLogin';
 
 interface Props {
   handleLogin: (e: FormEvent<HTMLFormElement>, input: LoginInput) => unknown;

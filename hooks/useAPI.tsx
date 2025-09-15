@@ -2,9 +2,9 @@ import { authCookieKey, authRefreshCookieKey, CreatorSignupInput, FetchMethods, 
 import { configService } from '@/util/config';
 import { setCookie } from 'cookies-next';
 
-const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
+export const fetchRequest = async (input: { init: RequestInit; fetchMethod: FetchMethods; pathName: string }) => {
   const { init, fetchMethod, pathName } = input;
-  const url = new URL(configService.NEXT_PUBLIC_BASE_URL);
+  const url = new URL(configService.NEXT_PUBLIC_API_URL);
   url.pathname = pathName;
   const res = await fetch(url, {
     ...init,

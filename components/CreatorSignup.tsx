@@ -4,15 +4,44 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreatorSignupInput } from '@/lib/constants';
+import { isValidEmail, isValidPassword } from '@/util/helpers';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Header } from './Header';
 import OtherLogin from './OtherLogin';
 
-const CreatorSignup = () => {
+interface Props {
+  handleCreatorSignUp: (e: FormEvent<HTMLFormElement>, input: CreatorSignupInput) => unknown;
+  loading: boolean;
+}
+
+const emptyInput: CreatorSignupInput = {
+  email: '',
+  fullName: '',
+  password: '',
+  username: ''
+};
+
+const CreatorSignup: React.FC<Props> = ({ handleCreatorSignUp, loading }) => {
+  const [input, setInput] = useState<CreatorSignupInput>(emptyInput);
   const [activeTab, setActiveTab] = useState<string>('account');
-  const router = useRouter();
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsDisabled(
+      !input.email ||
+        !input.fullName ||
+        !input.password ||
+        !input.username ||
+        !isValidEmail(input.email) ||
+        !isValidPassword(input.password)
+    );
+  }, [input.email, input.fullName, input.password, input.username]);
+
+  const handleChangeInput = ({ key, value }: { key: string; value: string }) => {
+    setInput({ ...input, [key]: value.trim() });
+  };
 
   return (
     <form className="p-6 md:p-8 flex flex-col">
@@ -27,12 +56,26 @@ const CreatorSignup = () => {
 
           <TabsContent value="account" className="space-y-1">
             <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-fullname">Full name</Label>
-              <Input id="tabs-demo-fullname" placeholder="Meow User" type="text" />
+              <Label htmlFor="creator-fullname">Full name</Label>
+              <Input
+                id="creator-fullname"
+                placeholder="Meow User"
+                type="text"
+                value={input.fullName}
+                onChange={(e) => handleChangeInput({ key: 'fullName', value: e.target.value })}
+              />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-email">Email</Label>
-              <Input id="tabs-demo-email" placeholder="meow@gmail.com" type="email" />
+              <Label htmlFor="creator-email">Email</Label>
+              <Input
+                id="creator-email"
+                placeholder="meow@fans.com"
+                type="email"
+                required
+                autoComplete="email"
+                value={input.email}
+                onChange={(e) => handleChangeInput({ key: 'email', value: e.target.value })}
+              />
             </div>
             <Button type="button" className="w-full mt-7" onClick={() => setActiveTab('password')}>
               Next
@@ -41,14 +84,28 @@ const CreatorSignup = () => {
 
           <TabsContent value="password" className="space-y-1">
             <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-username">Username</Label>
-              <Input id="tabs-demo-username" type="text" placeholder="@meowfan" autoComplete="username" />
+              <Label htmlFor="creator-username">Username</Label>
+              <Input
+                id="creator-username"
+                type="text"
+                placeholder="@meowfan"
+                autoComplete="username"
+                value={input.username}
+                required
+                onChange={(e) => handleChangeInput({ key: 'username', value: e.target.value })}
+              />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-new-password">Password</Label>
-              <Input id="tabs-demo-new-password" type="password" autoComplete="new-password" />
+              <Label htmlFor="creator-password">Password</Label>
+              <Input
+                id="creator-password"
+                type="password"
+                autoComplete="password"
+                value={input.password}
+                onChange={(e) => handleChangeInput({ key: 'password', value: e.target.value })}
+              />
             </div>
-            <Button type="submit" className="w-full mt-7">
+            <Button type="submit" className="w-full mt-7" disabled={isDisabled}>
               Signup
             </Button>
           </TabsContent>

@@ -17,7 +17,7 @@ interface Props {
   loading: boolean;
 }
 
-const emptyInput = {
+const emptyInput: SignupInput = {
   email: '',
   fullName: '',
   password: ''

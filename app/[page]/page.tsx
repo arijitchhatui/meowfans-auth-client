@@ -6,7 +6,7 @@ import useAPI from '@/hooks/useAPI';
 import { AppSizes, AuthPaths, CreatorSignupInput, LoginInput, SignupInput, UserRoles } from '@/lib/constants';
 import { Icons } from '@/lib/icons/Icons';
 import { configService } from '@/util/config';
-import { redirectToNewURL } from '@/util/helpers';
+import { buildSafeUrl } from '@/util/helpers';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { FormEvent, Suspense, useState } from 'react';
@@ -34,8 +34,8 @@ export default function Auth() {
 
       const isCreator = roles.includes(UserRoles.CREATOR);
 
-      const creatorAppUrl = redirectToNewURL({
-        host: configService.NEXT_PUBLIC_BASE_URL,
+      const creatorAppUrl = buildSafeUrl({
+        host: configService.NEXT_PUBLIC_CREATOR_URL,
         pathname: '/analytics'
       });
 
@@ -112,7 +112,7 @@ export default function Auth() {
                       return <ForgotPassword />;
 
                     case AuthPaths.CREATOR_SIGNUP:
-                      return <CreatorSignup />;
+                      return <CreatorSignup handleCreatorSignUp={handleCreatorSignup} loading={loading} />;
                   }
                 })()}
                 <div className="bg-muted relative hidden content-center md:block">{Icons.appIcon(AppSizes.ICON_384)}</div>

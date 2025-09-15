@@ -67,32 +67,30 @@ export enum AuthPaths {
   META_LOGIN = '/meta'
 }
 
-export enum FileType {
-  VIDEO = 'video',
-  IMAGE = 'image',
-  AUDIO = 'audio',
-  DOCUMENT = 'document'
-}
-
-export enum MediaType {
-  PROFILE_MEDIA = 'profileMedia',
-  MESSAGE_MEDIA = 'messageMedia',
-  POST_MEDIA = 'postMedia'
-}
-
-export enum ImageType {
-  BLURRED = 'blurred',
-  ORIGINAL = 'original',
-  RESIZED = 'resized'
-}
-
-export interface UploadMediaInput {
-  mediaType: MediaType;
-}
-
 export interface CreatorSignupInput {
   email: string;
   password: string;
   fullName: string;
   username: string;
+}
+
+export enum TokenType {
+  ACCESS_TOKEN = 'access_token',
+  REFRESH_TOKEN = 'refresh_token',
+  EMAIL_VERIFICATION = 'email_verification',
+  PASSWORD_RESET = 'password_reset',
+  EMAIL_LOGIN = 'email_login'
+}
+
+export interface JwtUser {
+  sub: string; // holds userId
+  jti: string; // JWT ID
+  iat: number; // issued at
+  exp: number; // expiration time
+  version: string;
+  type: TokenType;
+  roles: UserRoles[];
+  ip: string;
+  userAgent: string;
+  associated_access_token_jti: string;
 }
