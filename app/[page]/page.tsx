@@ -32,7 +32,7 @@ export default function Auth() {
     try {
       const { roles } = await login(input);
 
-      const isCreator = roles.includes(UserRoles.CREATOR);
+      const isCreator = roles.includes(UserRoles.CREATOR || UserRoles.ADMIN);
 
       const creatorAppUrl = buildSafeUrl({
         host: configService.NEXT_PUBLIC_CREATOR_URL,
