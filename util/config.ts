@@ -13,5 +13,8 @@ export const configService = {
   },
   get NEXT_PUBLIC_APP_DOMAINS() {
     return process.env.NEXT_PUBLIC_APP_DOMAINS!;
+  },
+  get NEXT_PUBLIC_ADMIN_URL() {
+    return process.env.NEXT_PUBLIC_ADMIN_URL!;
   }
 };

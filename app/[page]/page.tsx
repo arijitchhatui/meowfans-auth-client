@@ -32,7 +32,7 @@ export default function Auth() {
     try {
       const { roles } = await login(input);
 
-      const isCreator = [UserRoles.CREATOR, UserRoles.ADMIN].some((role) => role === roles[0]);
+      const role = roles[0] as UserRoles;
 
       const creatorAppUrl = buildSafeUrl({
         host: configService.NEXT_PUBLIC_CREATOR_URL,
@@ -44,7 +44,19 @@ export default function Auth() {
         pathname: '/home'
       });
 
-      if (isCreator) return router.push(creatorAppUrl);
+      const adminAppUrl = buildSafeUrl({
+        host: configService.NEXT_PUBLIC_ADMIN_URL,
+        pathname: '/vaults'
+      });
+
+      switch (role) {
+        case UserRoles.ADMIN:
+          return router.push(adminAppUrl);
+        case UserRoles.CREATOR:
+          return router.push(creatorAppUrl);
+        case UserRoles.FAN:
+          return router.push(fanAppUrl);
+      }
 
       toast.success('Logged in');
       return router.push(fanAppUrl);
