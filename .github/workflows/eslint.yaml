@@ -10,7 +10,7 @@ jobs:
   eslint:
     name: Run eslint scanning
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
