@@ -30,10 +30,10 @@ jobs:
         run: pnpm install
 
       - name: Lint Check
-        run: pnpm run lint
+        run: pnpm run start:lint
 
       - name: Build
-        run: pnpm run build
+        run: pnpm run start:build
         env:
           NODE_ENV: production
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
